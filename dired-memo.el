@@ -28,10 +28,94 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+(require 'dired)
+
 (defgroup dired-memo nil
   "Add memo to directory and show it in dired."
   :group 'convenience
   :link '(url-link :tag "Github" "https://github.com/conao3/dired-memo.el"))
+
+(defvar dired-memo-mode)
+
+(defun dired-memo--add-overlay (pos string)
+  "Add overlay to display STRING at POS."
+  (let ((ov (make-overlay (1- pos) pos)))
+    (overlay-put ov 'dired-memo-overlay t)
+    (overlay-put ov 'after-string string)))
+
+(defun dired-memo--overlays-in (beg end)
+  "Get all dired-memo overlays between BEG to END."
+  (cl-remove-if-not
+   (lambda (ov)
+     (overlay-get ov 'dired-memo-overlay))
+   (overlays-in beg end)))
+
+(defun dired-memo--remove-all-overlays ()
+  "Remove all `dired-memo' overlays."
+  (save-restriction
+    (widen)
+    (mapc #'delete-overlay
+          (dired-memo--overlays-in (point-min) (point-max)))))
+
+(defun dired-memo--refresh ()
+  "Display the icons of files in a dired buffer."
+  (dired-memo--remove-all-overlays)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (when (dired-move-to-filename nil)
+        (let ((file (dired-get-filename 'relative 'noerror)))
+          (when file
+            (let ((icon (if (file-directory-p file)
+                            (all-the-icons-icon-for-dir file
+                                                        :face 'dired-memo-dir-face
+                                                        :v-adjust dired-memo-v-adjust)
+                          (all-the-icons-icon-for-file file :v-adjust dired-memo-v-adjust))))
+              (if (member file '("." ".."))
+                  (dired-memo--add-overlay (point) "  \t")
+                (dired-memo--add-overlay (point) (concat icon "\t")))))))
+      (forward-line 1))))
+
+(defun dired-memo--refresh-advice (fn &rest args)
+  "Advice function for FN with ARGS."
+  (apply fn args)
+  (when dired-memo-mode
+    (dired-memo--refresh)))
+
+(defvar dired-memo-advice-alist
+  '((dired-readin                . dired-memo--refresh-advice)
+    (dired-revert                . dired-memo--refresh-advice)
+    (dired-do-create-files       . dired-memo--refresh-advice)
+    (dired-do-kill-lines         . dired-memo--refresh-advice)
+    (dired-insert-subdir         . dired-memo--refresh-advice)
+    (dired-create-directory      . dired-memo--refresh-advice)
+    (dired-internal-do-deletions . dired-memo--refresh-advice)
+    (dired-narrow--internal      . dired-memo--refresh-advice))
+  "Alist of advice and advice functions.")
+
+(defun dired-memo--setup ()
+  "Setup `dired-memo'."
+  (when (derived-mode-p 'dired-mode)
+    (setq-local tab-width 1)
+    (pcase-dolist (`(,sym . ,fn) dired-memo-advice-alist)
+      (advice-add sym :around fn))
+    (dired-memo--refresh)))
+
+(defun dired-memo--teardown ()
+  "Functions used as advice when redisplaying buffer."
+  (pcase-dolist (`(,sym . ,fn) dired-memo-advice-alist)
+    (advice-remove sym fn))
+  (dired-memo--remove-all-overlays))
+
+;;;###autoload
+(define-minor-mode dired-memo-mode
+  "Display all-the-icons icon for each files in a dired buffer."
+  :lighter " dired-memo"
+  (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
+    (if dired-memo-mode
+        (dired-memo--setup)
+      (dired-memo--teardown))))
 
 (provide 'dired-memo)
 
