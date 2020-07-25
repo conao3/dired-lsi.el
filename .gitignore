@@ -3,3 +3,5 @@
 *-autoloads.el
 *.elc
 /.keg
+
+!.description.lsi

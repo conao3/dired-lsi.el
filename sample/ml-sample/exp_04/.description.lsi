@@ -1,0 +1,2 @@
+score=0.95, lr=1e-6, batch_size=16 +BatchNorm
+best validation result
