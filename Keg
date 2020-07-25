@@ -3,7 +3,7 @@
 (source gnu melpa)
 
 (package
- (dired-memo
-   (recipe . (dired-memo :fetcher github :repo "conao3/dired-memo.el"))))
+ (dired-lsi
+   (recipe . (dired-lsi :fetcher github :repo "conao3/dired-lsi.el"))))
 
 (dev-dependency cort)

@@ -1,9 +1,9 @@
-;;; dired-memo-tests.el --- Test definitions for dired-memo  -*- lexical-binding: t; -*-
+;;; dired-lsi-tests.el --- Test definitions for dired-lsi  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019  Naoya Yamashita
 
 ;; Author: Naoya Yamashita <conao3@gmail.com>
-;; URL: https://github.com/conao3/dired-memo.el
+;; URL: https://github.com/conao3/dired-lsi.el
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,19 +20,19 @@
 
 ;;; Commentary:
 
-;; Test definitions for `dired-memo'.
+;; Test definitions for `dired-lsi'.
 
 
 ;;; Code:
 
 (require 'cort)
-(require 'dired-memo)
+(require 'dired-lsi)
 
 
-;; (provide 'dired-memo-tests)
+;; (provide 'dired-lsi-tests)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; dired-memo-tests.el ends here
+;;; dired-lsi-tests.el ends here

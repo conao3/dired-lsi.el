@@ -3,8 +3,8 @@
 all:
 
 REPO_USER    := conao3
-PACKAGE_NAME := dired-memo
-REPO_NAME    := dired-memo.el
+PACKAGE_NAME := dired-lsi
+REPO_NAME    := dired-lsi.el
 
 EMACS        ?= emacs
 

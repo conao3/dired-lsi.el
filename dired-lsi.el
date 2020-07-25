@@ -1,4 +1,4 @@
-;;; dired-memo.el --- Add memo to directory and show it in dired  -*- lexical-binding: t; -*-
+;;; dired-lsi.el --- Add memo to directory and show it in dired  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020  Naoya Yamashita
 
@@ -6,7 +6,7 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "26.1"))
-;; URL: https://github.com/conao3/dired-memo.el
+;; URL: https://github.com/conao3/dired-lsi.el
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -32,46 +32,46 @@
 (require 'dired)
 (require 'subr-x)
 
-(defgroup dired-memo nil
+(defgroup dired-lsi nil
   "Add memo to directory and show it in dired."
   :group 'convenience
-  :link '(url-link :tag "Github" "https://github.com/conao3/dired-memo.el"))
+  :link '(url-link :tag "Github" "https://github.com/conao3/dired-lsi.el"))
 
-(defcustom dired-memo-separator " / "
+(defcustom dired-lsi-separator " / "
   "Separetor between item and description."
-  :group 'dired-memo
+  :group 'dired-lsi
   :type 'string)
 
-(defface dired-memo-default-face
+(defface dired-lsi-default-face
   '((t (:inherit font-lock-warning-face)))
   "Default face."
-  :group 'dired-memo)
+  :group 'dired-lsi)
 
-(defvar dired-memo-mode)
+(defvar dired-lsi-mode)
 
-(defun dired-memo--add-overlay (pos string)
+(defun dired-lsi--add-overlay (pos string)
   "Add overlay to display STRING at POS."
   (let ((ov (make-overlay (1- pos) pos)))
-    (overlay-put ov 'dired-memo-overlay t)
+    (overlay-put ov 'dired-lsi-overlay t)
     (overlay-put ov 'after-string string)))
 
-(defun dired-memo--overlays-in (beg end)
-  "Get all dired-memo overlays between BEG to END."
+(defun dired-lsi--overlays-in (beg end)
+  "Get all dired-lsi overlays between BEG to END."
   (cl-remove-if-not
    (lambda (ov)
-     (overlay-get ov 'dired-memo-overlay))
+     (overlay-get ov 'dired-lsi-overlay))
    (overlays-in beg end)))
 
-(defun dired-memo--remove-all-overlays ()
-  "Remove all `dired-memo' overlays."
+(defun dired-lsi--remove-all-overlays ()
+  "Remove all `dired-lsi' overlays."
   (save-restriction
     (widen)
     (mapc #'delete-overlay
-          (dired-memo--overlays-in (point-min) (point-max)))))
+          (dired-lsi--overlays-in (point-min) (point-max)))))
 
-(defun dired-memo--refresh ()
+(defun dired-lsi--refresh ()
   "Display the icons of files in a dired buffer."
-  (dired-memo--remove-all-overlays)
+  (dired-lsi--remove-all-overlays)
   (save-excursion
     (goto-char (point-min))
     (while (not (eobp))
@@ -82,56 +82,56 @@
                             (with-temp-buffer
                               (insert-file-contents file)
                               (buffer-string))))
-                    (desc* (propertize desc 'face 'dired-memo-default-face)))
+                    (desc* (propertize desc 'face 'dired-lsi-default-face)))
           (end-of-line)
-          (dired-memo--add-overlay
-           (point) (concat dired-memo-separator desc*))))
+          (dired-lsi--add-overlay
+           (point) (concat dired-lsi-separator desc*))))
       (forward-line 1))))
 
-(defun dired-memo--refresh-advice (fn &rest args)
+(defun dired-lsi--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
   (apply fn args)
-  (when dired-memo-mode
-    (dired-memo--refresh)))
+  (when dired-lsi-mode
+    (dired-lsi--refresh)))
 
-(defvar dired-memo-advice-alist
-  '((dired-readin                . dired-memo--refresh-advice)
-    (dired-revert                . dired-memo--refresh-advice)
-    (dired-do-create-files       . dired-memo--refresh-advice)
-    (dired-do-kill-lines         . dired-memo--refresh-advice)
-    (dired-insert-subdir         . dired-memo--refresh-advice)
-    (dired-create-directory      . dired-memo--refresh-advice)
-    (dired-internal-do-deletions . dired-memo--refresh-advice)
-    (dired-narrow--internal      . dired-memo--refresh-advice))
+(defvar dired-lsi-advice-alist
+  '((dired-readin                . dired-lsi--refresh-advice)
+    (dired-revert                . dired-lsi--refresh-advice)
+    (dired-do-create-files       . dired-lsi--refresh-advice)
+    (dired-do-kill-lines         . dired-lsi--refresh-advice)
+    (dired-insert-subdir         . dired-lsi--refresh-advice)
+    (dired-create-directory      . dired-lsi--refresh-advice)
+    (dired-internal-do-deletions . dired-lsi--refresh-advice)
+    (dired-narrow--internal      . dired-lsi--refresh-advice))
   "Alist of advice and advice functions.")
 
-(defun dired-memo--setup ()
-  "Setup `dired-memo'."
+(defun dired-lsi--setup ()
+  "Setup `dired-lsi'."
   (when (derived-mode-p 'dired-mode)
     (setq-local tab-width 1)
-    (pcase-dolist (`(,sym . ,fn) dired-memo-advice-alist)
+    (pcase-dolist (`(,sym . ,fn) dired-lsi-advice-alist)
       (advice-add sym :around fn))
-    (dired-memo--refresh)))
+    (dired-lsi--refresh)))
 
-(defun dired-memo--teardown ()
+(defun dired-lsi--teardown ()
   "Functions used as advice when redisplaying buffer."
-  (pcase-dolist (`(,sym . ,fn) dired-memo-advice-alist)
+  (pcase-dolist (`(,sym . ,fn) dired-lsi-advice-alist)
     (advice-remove sym fn))
-  (dired-memo--remove-all-overlays))
+  (dired-lsi--remove-all-overlays))
 
 ;;;###autoload
-(define-minor-mode dired-memo-mode
+(define-minor-mode dired-lsi-mode
   "Display all-the-icons icon for each files in a dired buffer."
-  :lighter " dired-memo"
+  :lighter " dired-lsi"
   (when (and (derived-mode-p 'dired-mode) (display-graphic-p))
-    (if dired-memo-mode
-        (dired-memo--setup)
-      (dired-memo--teardown))))
+    (if dired-lsi-mode
+        (dired-lsi--setup)
+      (dired-lsi--teardown))))
 
-(provide 'dired-memo)
+(provide 'dired-lsi)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; dired-memo.el ends here
+;;; dired-lsi.el ends here
