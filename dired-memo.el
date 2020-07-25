@@ -65,16 +65,16 @@
     (goto-char (point-min))
     (while (not (eobp))
       (when (dired-move-to-filename nil)
-        (let ((file (dired-get-filename 'relative 'noerror)))
-          (when file
-            (let ((icon (if (file-directory-p file)
-                            (all-the-icons-icon-for-dir file
-                                                        :face 'dired-memo-dir-face
-                                                        :v-adjust dired-memo-v-adjust)
-                          (all-the-icons-icon-for-file file :v-adjust dired-memo-v-adjust))))
-              (if (member file '("." ".."))
-                  (dired-memo--add-overlay (point) "  \t")
-                (dired-memo--add-overlay (point) (concat icon "\t")))))))
+        (let ((item (dired-get-filename 'relative 'noerror)))
+          (when item
+            (let* ((file (expand-file-name ".description.lsi" item))
+                   (desc (when (file-readable-p file)
+                           (with-temp-buffer
+                             (insert-file-contents file)
+                             (buffer-string)))))
+              (when desc
+                (end-of-line)
+                (dired-memo--add-overlay (point) (concat " " desc)))))))
       (forward-line 1))))
 
 (defun dired-memo--refresh-advice (fn &rest args)
