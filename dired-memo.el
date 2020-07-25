@@ -36,6 +36,11 @@
   :group 'convenience
   :link '(url-link :tag "Github" "https://github.com/conao3/dired-memo.el"))
 
+(defcustom dired-memo-separator " / "
+  "Separetor between item and description."
+  :group 'dired-memo
+  :type 'string)
+
 (defface dired-memo-default-face
   '((t (:inherit font-lock-warning-face)))
   "Default face."
@@ -81,7 +86,7 @@
               (when desc
                 (end-of-line)
                 (dired-memo--add-overlay
-                 (point) (concat " " desc*)))))))
+                 (point) (concat dired-memo-separator desc*)))))))
       (forward-line 1))))
 
 (defun dired-memo--refresh-advice (fn &rest args)
