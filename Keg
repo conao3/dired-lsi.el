@@ -1,0 +1,9 @@
+;; Keg
+
+(source gnu melpa)
+
+(package
+ (dired-memo
+   (recipe . (dired-memo :fetcher github :repo "conao3/dired-memo.el"))))
+
+(dev-dependency cort)
