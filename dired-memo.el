@@ -36,6 +36,11 @@
   :group 'convenience
   :link '(url-link :tag "Github" "https://github.com/conao3/dired-memo.el"))
 
+(defface dired-memo-default-face
+  '((t (:inherit font-lock-warning-face)))
+  "Default face."
+  :group 'dired-memo)
+
 (defvar dired-memo-mode)
 
 (defun dired-memo--add-overlay (pos string)
@@ -71,10 +76,12 @@
                    (desc (when (file-readable-p file)
                            (with-temp-buffer
                              (insert-file-contents file)
-                             (buffer-string)))))
+                             (buffer-string))))
+                   (desc* (when desc (propertize desc 'face 'dired-memo-default-face))))
               (when desc
                 (end-of-line)
-                (dired-memo--add-overlay (point) (concat " " desc)))))))
+                (dired-memo--add-overlay
+                 (point) (concat " " desc*)))))))
       (forward-line 1))))
 
 (defun dired-memo--refresh-advice (fn &rest args)
