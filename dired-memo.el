@@ -30,6 +30,7 @@
 
 (require 'cl-lib)
 (require 'dired)
+(require 'subr-x)
 
 (defgroup dired-memo nil
   "Add memo to directory and show it in dired."
@@ -75,18 +76,16 @@
     (goto-char (point-min))
     (while (not (eobp))
       (when (dired-move-to-filename nil)
-        (let ((item (dired-get-filename 'relative 'noerror)))
-          (when item
-            (let* ((file (expand-file-name ".description.lsi" item))
-                   (desc (when (file-readable-p file)
-                           (with-temp-buffer
-                             (insert-file-contents file)
-                             (buffer-string))))
-                   (desc* (when desc (propertize desc 'face 'dired-memo-default-face))))
-              (when desc
-                (end-of-line)
-                (dired-memo--add-overlay
-                 (point) (concat dired-memo-separator desc*)))))))
+        (when-let* ((item (dired-get-filename 'relative 'noerror))
+                    (file (expand-file-name ".description.lsi" item))
+                    (desc (when (file-readable-p file)
+                            (with-temp-buffer
+                              (insert-file-contents file)
+                              (buffer-string))))
+                    (desc* (propertize desc 'face 'dired-memo-default-face)))
+          (end-of-line)
+          (dired-memo--add-overlay
+           (point) (concat dired-memo-separator desc*))))
       (forward-line 1))))
 
 (defun dired-memo--refresh-advice (fn &rest args)
