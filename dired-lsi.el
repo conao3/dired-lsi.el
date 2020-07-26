@@ -42,6 +42,13 @@
   :group 'dired-lsi
   :type 'string)
 
+(defcustom dired-lsi--create-spacer-fn #'ignore
+  "Create additional spacer function.
+This variable shuold be function symbol or lambda function.
+That function called with empty argument and should return string or nil."
+  :group 'dired-lsi
+  :type 'function)
+
 (defface dired-lsi-default-face
   '((t (:inherit font-lock-warning-face)))
   "Default face."
@@ -69,6 +76,43 @@
     (mapc #'delete-overlay
           (dired-lsi--overlays-in (point-min) (point-max)))))
 
+(defmacro dired-lsi--thread-last-check-empty (&rest forms)
+  "Thread FORMS elements as the last argument of their successor.
+Do `thread-last' and check if it isn't empty at each steps."
+  (declare (indent 1) (debug thread-first))
+  `(catch 'empty
+     (cl-flet ((throw-if-empty
+                (elm)
+                (if (and elm (not (string-empty-p elm)))
+                    elm
+                  (throw 'empty nil))))
+       (thread-last ,(pop forms)
+         ,@(mapcan (lambda (elm) `((throw-if-empty) ,elm)) forms)))))
+
+(defun dired-lsi--modify-description (desc)
+  "Modify DESC to suit dired buffer.
+If return nil, dired-lsi doesn't show description."
+  (dired-lsi--thread-last-check-empty desc
+    (string-trim-right)
+    (funcall (lambda (elm)
+               (propertize elm 'face 'dired-lsi-default-face)))
+    (concat dired-lsi-separator)
+    (funcall (lambda (elm)
+               (if (not (string-match-p "\n" elm))
+                   elm
+                 (let ((col (save-excursion
+                              (end-of-line)
+                              (current-column)))
+                       (sep (length dired-lsi-separator)))
+                   (replace-regexp-in-string
+                    "\n"
+                    (format "\n%s"
+                            (concat
+                             (funcall dired-lsi--create-spacer-fn)
+                             (make-string (+ sep col) ?\s)))
+                    elm)))))
+    (identity)))                        ; empty check
+
 (defun dired-lsi--refresh ()
   "Display the icons of files in a dired buffer."
   (dired-lsi--remove-all-overlays)
@@ -81,12 +125,10 @@
                     (desc (when (file-readable-p file)
                             (with-temp-buffer
                               (insert-file-contents file)
-                              (string-trim-right (buffer-string)))))
-                    (desc* (propertize desc 'face 'dired-lsi-default-face)))
-          (unless (string-empty-p desc*)
-            (end-of-line)
-            (dired-lsi--add-overlay
-             (point) (concat dired-lsi-separator desc*)))))
+                              (buffer-string))))
+                    (desc* (dired-lsi--modify-description desc)))
+          (end-of-line)
+          (dired-lsi--add-overlay (point) desc*)))
       (forward-line 1))))
 
 (defun dired-lsi--refresh-advice (fn &rest args)
