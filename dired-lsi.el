@@ -166,6 +166,20 @@ If return nil, dired-lsi doesn't show description."
         (insert desc))))
   (dired-lsi--refresh))
 
+;;;###autoload
+(defun dired-lsi-mkdir-with-description (name desc)
+  "Make directory named NAME with dired-lsi DESC."
+  (interactive
+   (list (read-string "Directory name: ")
+         (read-string "Desctiption: " nil 'dired-lsi-desctiption-history)))
+  (let ((dir (expand-file-name name)))
+    (when (file-exists-p dir)
+      (error "%s is already exists" dir))
+    (mkdir dir)
+    (dired-lsi-add-description (expand-file-name name) desc)
+    (when (derived-mode-p 'dired-mode)
+      (dired-revert))))
+
 
 ;;; Minor-mode
 
