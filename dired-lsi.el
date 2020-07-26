@@ -147,22 +147,24 @@ If return nil, dired-lsi doesn't show description."
 (defvar dired-lsi-desctiption-history nil)
 
 ;;;###autoload
-(defun dired-lsi-add-description ()
-  "In dired, add description for item on this line."
-  (interactive)
-  (let* ((dir (dired-get-filename nil 'allow-dir))
-         (file (expand-file-name ".description.lsi" dir))
-         (desc (read-string "Description: "
-                            (when (file-readable-p file)
-                              (with-temp-buffer
-                                (insert-file-contents file)
-                                (buffer-string)))
-                            'dired-lsi-desctiption-history)))
+(defun dired-lsi-add-description (dir desc)
+  "In dired, add DESC for DIR on this line."
+  (interactive
+   (let (dir*)
+     (list (setq dir* (dired-get-filename nil 'allow-dir))
+           (let ((file (expand-file-name ".description.lsi" dir*)))
+             (read-string "Description: "
+                          (when (file-readable-p file)
+                            (with-temp-buffer
+                              (insert-file-contents file)
+                              (buffer-string)))
+                          'dired-lsi-desctiption-history)))))
+  (let ((file (expand-file-name ".description.lsi" dir)))
     (if (string-empty-p desc)
         (delete-file file)
       (with-temp-file file
-        (insert desc)))
-    (dired-lsi--refresh)))
+        (insert desc))))
+  (dired-lsi--refresh))
 
 
 ;;; Minor-mode
