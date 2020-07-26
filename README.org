@@ -39,6 +39,7 @@ If you use [[https://github.com/conao3/dired-git.el][dired-git]], I suggest belo
 
 #+begin_src emacs-lisp
   (leaf dired-lsi
+    :ensure t
     :custom ((dired-lsi--create-spacer-fn
               . (setq dired-lsi--create-spacer-fn
                       (lambda () (when all-the-icons-dired-mode "  \t")))))
