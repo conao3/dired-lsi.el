@@ -158,8 +158,10 @@ If return nil, dired-lsi doesn't show description."
                                 (insert-file-contents file)
                                 (buffer-string)))
                             'dired-lsi-desctiption-history)))
-    (with-temp-file file
-      (insert desc))
+    (if (string-empty-p desc)
+        (delete-file file)
+      (with-temp-file file
+        (insert desc)))
     (dired-lsi--refresh)))
 
 
