@@ -61,6 +61,9 @@ That function called with empty argument and should return string or nil."
   "Default face."
   :group 'dired-lsi)
 
+
+;;; Functions
+
 (defvar dired-lsi-mode)
 
 (defun dired-lsi--add-overlay (pos string)
@@ -137,6 +140,12 @@ If return nil, dired-lsi doesn't show description."
           (end-of-line)
           (dired-lsi--add-overlay (point) desc*)))
       (forward-line 1))))
+
+
+;;; Main
+
+
+;;; Minor-mode
 
 (defun dired-lsi--refresh-advice (fn &rest args)
   "Advice function for FN with ARGS."
