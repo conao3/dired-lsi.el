@@ -145,7 +145,8 @@ If return nil, dired-lsi doesn't show description."
     (dired-insert-subdir         . dired-lsi--refresh-advice)
     (dired-create-directory      . dired-lsi--refresh-advice)
     (dired-internal-do-deletions . dired-lsi--refresh-advice)
-    (dired-narrow--internal      . dired-lsi--refresh-advice))
+    (dired-narrow--internal      . dired-lsi--refresh-advice)
+    (dired-hide-details-mode     . dired-lsi--refresh-advice))
   "Alist of advice and advice functions.")
 
 (defun dired-lsi--setup ()
