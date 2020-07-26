@@ -26,10 +26,6 @@
 * Description
 [[https://github.com/conao3/dired-lsi.el][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/dired-lsi.gif]]
 
-Add memo to directory and show it in dired.
-
-This package is dired client for [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]], but it also work standalone.
-
 - Filesystem Hierarchy Standard sample ::
 
   [[https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/fhs-sample.png][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/fhs-sample.png]]
@@ -37,6 +33,10 @@ This package is dired client for [[https://github.com/ShotaroKataoka/ls-Improved
 - Machine learning directoy sample ::
 
   [[https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/ml-sample.png][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/ml-sample.png]]
+
+Add memo to directory and show it in dired.
+
+This package is dired client for [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]], but it also work standalone.
 
 * Install
 Sample install code using [[https://github.com/conao3/leaf.el][leaf.el]].
