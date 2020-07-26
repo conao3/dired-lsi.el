@@ -57,6 +57,12 @@ If you use [[https://github.com/conao3/dired-git.el][dired-git]], I suggest belo
     :hook dired-mode-hook)
 #+end_src
 
+You can also install =ls-improved= CLI client via =pip= (see [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]]).
+
+#+begin_src bash
+  pip install ls-Improved
+#+end_src
+
 * Usage
 Enable ~dired-lsi-mode~ in dired buffer.
 
