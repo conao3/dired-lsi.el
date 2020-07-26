@@ -144,6 +144,24 @@ If return nil, dired-lsi doesn't show description."
 
 ;;; Main
 
+(defvar dired-lsi-desctiption-history nil)
+
+;;;###autoload
+(defun dired-lsi-add-description ()
+  "In dired, add description for item on this line."
+  (interactive)
+  (let* ((dir (dired-get-filename nil 'allow-dir))
+         (file (expand-file-name ".description.lsi" dir))
+         (desc (read-string "Description: "
+                            (when (file-readable-p file)
+                              (with-temp-buffer
+                                (insert-file-contents file)
+                                (buffer-string)))
+                            'dired-lsi-desctiption-history)))
+    (with-temp-file file
+      (insert desc))
+    (dired-lsi--refresh)))
+
 
 ;;; Minor-mode
 
