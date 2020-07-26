@@ -48,8 +48,16 @@ If you use [[https://github.com/conao3/dired-git.el][dired-git]], I suggest belo
 * Usage
 Enable ~dired-lsi-mode~ in dired buffer.
 
-Add/Edit ~.description.lsi~ directory to modify folder description.
+You can edit folder description via below functions.
+
+- dired-lsi-add-description :: In dired, add description for directory on this line.
+- dired-lsi-mkdir-with-description :: Make directory with description.
+
+Or, Add/Edit ~.description.lsi~ directly to modify folder description.
 See [[https://github.com/ShotaroKataoka/ls-Improved#usage][Usage - ls-Improved]].
+
+After edit ~.description.lsi~, please revert dired buffer
+(In dired buffer, ~M-x dired-revert (g)~) to reflect the change.
 
 * Customize
 - dired-lsi-separator :: Separetor between item and description.
