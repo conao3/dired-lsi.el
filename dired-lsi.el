@@ -83,9 +83,10 @@
                               (insert-file-contents file)
                               (string-trim-right (buffer-string)))))
                     (desc* (propertize desc 'face 'dired-lsi-default-face)))
-          (end-of-line)
-          (dired-lsi--add-overlay
-           (point) (concat dired-lsi-separator desc*))))
+          (unless (string-empty-p desc*)
+            (end-of-line)
+            (dired-lsi--add-overlay
+             (point) (concat dired-lsi-separator desc*)))))
       (forward-line 1))))
 
 (defun dired-lsi--refresh-advice (fn &rest args)
