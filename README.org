@@ -29,6 +29,8 @@ Add memo to directory and show it in dired.
 This package is dired client for [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]], but it also work standalone.
 
 * Install
+Sample install code using [[https://github.com/conao3/leaf.el][leaf.el]].
+
 #+begin_src emacs-lisp
   (leaf dired-lsi
     :ensure t
