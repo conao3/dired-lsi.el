@@ -26,14 +26,37 @@
 * Description
 Add memo to directory and show it in dired.
 
+This package is dired client for [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]], but it also work standalone.
+
 * Install
 #+begin_src emacs-lisp
-  (leaf dired-lsi :ensure t)
+  (leaf dired-lsi
+    :ensure t
+    :hook dired-mode-hook)
+#+end_src
+
+If you use [[https://github.com/conao3/dired-git.el][dired-git]], I suggest below customize.
+
+#+begin_src emacs-lisp
+  (leaf dired-lsi
+    :custom ((dired-lsi--create-spacer-fn
+              . (setq dired-lsi--create-spacer-fn
+                      (lambda () (when all-the-icons-dired-mode "  \t")))))
+    :hook dired-mode-hook)
 #+end_src
 
 * Usage
+Enable ~dired-lsi-mode~ in dired buffer.
+
+Add/Edit ~.description.lsi~ directory to modify folder description.
+See [[https://github.com/ShotaroKataoka/ls-Improved#usage][Usage - ls-Improved]].
 
 * Customize
+- dired-lsi-separator :: Separetor between item and description.
+- dired-lsi--create-spacer-fn :: Create additional spacer function.
+
+  This variable shuold be function symbol or lambda function.
+  That function called with empty argument and should return string or nil.
 
 * Information
 ** Community
