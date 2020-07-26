@@ -81,7 +81,7 @@
                     (desc (when (file-readable-p file)
                             (with-temp-buffer
                               (insert-file-contents file)
-                              (buffer-string))))
+                              (string-trim-right (buffer-string)))))
                     (desc* (propertize desc 'face 'dired-lsi-default-face)))
           (end-of-line)
           (dired-lsi--add-overlay
