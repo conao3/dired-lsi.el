@@ -45,13 +45,13 @@
   :link '(url-link :tag "Github" "https://github.com/conao3/dired-lsi.el"))
 
 (defcustom dired-lsi-separator " / "
-  "Separetor between item and description."
+  "Separator between item and description."
   :group 'dired-lsi
   :type 'string)
 
 (defcustom dired-lsi--create-spacer-fn #'ignore
   "Create additional spacer function.
-This variable shuold be function symbol or lambda function.
+This variable should be function symbol or lambda function.
 That function called with empty argument and should return string or nil."
   :group 'dired-lsi
   :type 'function)
@@ -144,7 +144,7 @@ If return nil, dired-lsi doesn't show description."
 
 ;;; Main
 
-(defvar dired-lsi-desctiption-history nil)
+(defvar dired-lsi-description-history nil)
 
 ;;;###autoload
 (defun dired-lsi-add-description (dir desc)
@@ -158,7 +158,7 @@ If return nil, dired-lsi doesn't show description."
                             (with-temp-buffer
                               (insert-file-contents file)
                               (buffer-string)))
-                          'dired-lsi-desctiption-history)))))
+                          'dired-lsi-description-history)))))
   (let ((file (expand-file-name ".description.lsi" dir)))
     (if (string-empty-p desc)
         (delete-file file)
@@ -171,7 +171,7 @@ If return nil, dired-lsi doesn't show description."
   "Make directory named NAME with dired-lsi DESC."
   (interactive
    (list (read-string "Directory name: ")
-         (read-string "Desctiption: " nil 'dired-lsi-desctiption-history)))
+         (read-string "Description: " nil 'dired-lsi-description-history)))
   (let ((dir (expand-file-name name)))
     (when (file-exists-p dir)
       (error "%s is already exists" dir))
