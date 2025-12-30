@@ -1,135 +1,115 @@
+#+title: dired-lsi.el
 #+author: conao3
-#+date: <2020-03-20 Fri>
 
-[[https://github.com/conao3/dired-lsi.el][https://raw.githubusercontent.com/conao3/files/master/blob/headers/png/dired-lsi.el.png]]
 [[https://github.com/conao3/dired-lsi.el/blob/master/LICENSE][https://img.shields.io/github/license/conao3/dired-lsi.el.svg?style=flat-square]]
 [[https://github.com/conao3/dired-lsi.el/releases][https://img.shields.io/github/tag/conao3/dired-lsi.el.svg?style=flat-square]]
 [[https://github.com/conao3/dired-lsi.el/actions][https://github.com/conao3/dired-lsi.el/workflows/Main%20workflow/badge.svg]]
-[[https://app.codacy.com/project/conao3/dired-lsi.el/dashboard][https://img.shields.io/codacy/grade/62a36f4f04524d5e8c758440e8071c45.svg?logo=codacy&style=flat-square]]
-[[https://www.patreon.com/conao3][https://img.shields.io/badge/patreon-become%20a%20patron-orange.svg?logo=patreon&style=flat-square]]
-[[https://twitter.com/conao_3][https://img.shields.io/badge/twitter-@conao__3-blue.svg?logo=twitter&style=flat-square]]
-[[https://conao3-support.slack.com/join/shared_invite/enQtNjUzMDMxODcyMjE1LWUwMjhiNTU3Yjk3ODIwNzAxMTgwOTkxNmJiN2M4OTZkMWY0NjI4ZTg4MTVlNzcwNDY2ZjVjYmRiZmJjZDU4MDE][https://img.shields.io/badge/chat-on_slack-blue.svg?logo=slack&style=flat-square]]
 
-* Table of Contents
-- [[#description][Description]]
-- [[#install][Install]]
-- [[#usage][Usage]]
-- [[#customize][Customize]]
-- [[#information][Information]]
-  - [[#community][Community]]
-  - [[#contribution][Contribution]]
-  - [[#migration][Migration]]
-  - [[#license][License]]
-  - [[#author][Author]]
-  - [[#contributors][Contributors]]
+Add directory descriptions to dired buffers. Annotate your folders with helpful memos that display inline.
 
-* Description
+This package is an Emacs client for [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]], but also works standalone.
+
 [[https://github.com/conao3/dired-lsi.el][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/dired-lsi.gif]]
 
-- Filesystem Hierarchy Standard sample ::
+** Examples
 
-  [[https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/fhs-sample.png][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/fhs-sample.png]]
+Filesystem Hierarchy Standard directory:
 
-- Machine learning directoy sample ::
+[[https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/fhs-sample.png][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/fhs-sample.png]]
 
-  [[https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/ml-sample.png][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/ml-sample.png]]
+Machine learning project:
 
-Add memo to directory and show it in dired.
+[[https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/ml-sample.png][https://raw.githubusercontent.com/conao3/files/master/blob/dired-lsi.el/ml-sample.png]]
 
-This package is dired client for [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]], but it also work standalone.
+** Requirements
 
-* Install
-Sample install code using [[https://github.com/conao3/leaf.el][leaf.el]].
+- Emacs 26.1 or later
 
-#+begin_src emacs-lisp
-  (leaf dired-lsi
-    :ensure t
-    :hook dired-mode-hook)
-#+end_src
+** Installation
 
-If you use [[https://github.com/conao3/dired-git.el][dired-git]], I suggest below customize.
+*** Using leaf.el
 
 #+begin_src emacs-lisp
-  (leaf dired-lsi
-    :ensure t
-    :custom ((dired-lsi--create-spacer-fn
-              . (lambda () (when all-the-icons-dired-mode "  \t"))))
-    :hook dired-mode-hook)
+(leaf dired-lsi
+  :ensure t
+  :hook dired-mode-hook)
 #+end_src
 
-You can also install =ls-improved= CLI client via =pip= (see [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]]).
+*** Using use-package
+
+#+begin_src emacs-lisp
+(use-package dired-lsi
+  :ensure t
+  :hook (dired-mode . dired-lsi-mode))
+#+end_src
+
+*** Manual
+
+#+begin_src emacs-lisp
+(add-hook 'dired-mode-hook 'dired-lsi-mode)
+#+end_src
+
+*** With dired-git integration
+
+If you use [[https://github.com/conao3/dired-git.el][dired-git]] with all-the-icons:
+
+#+begin_src emacs-lisp
+(leaf dired-lsi
+  :ensure t
+  :custom ((dired-lsi--create-spacer-fn
+            . (lambda () (when all-the-icons-dired-mode "  \t"))))
+  :hook dired-mode-hook)
+#+end_src
+
+*** Optional: ls-Improved CLI
+
+You can also install the =ls-improved= command-line tool via pip:
 
 #+begin_src bash
-  pip install ls-Improved
+pip install ls-Improved
 #+end_src
 
-* Usage
-Enable ~dired-lsi-mode~ in dired buffer.
+See [[https://github.com/ShotaroKataoka/ls-Improved][ls-Improved]] for details.
 
-You can edit folder description via below functions.
+** Usage
 
-- dired-lsi-add-description :: In dired, add description for directory on this line.
-- dired-lsi-mkdir-with-description :: Make directory with description.
+Enable =dired-lsi-mode= in any dired buffer to display directory descriptions.
 
-Or, Add/Edit ~.description.lsi~ directly to modify folder description.
-See [[https://github.com/ShotaroKataoka/ls-Improved#usage][Usage - ls-Improved]].
+*** Commands
 
-After edit ~.description.lsi~, please revert dired buffer
-(In dired buffer, ~M-x dired-revert (g)~) to reflect the change.
+- =dired-lsi-add-description= - Add or edit a description for the directory at point
+- =dired-lsi-mkdir-with-description= - Create a new directory with a description
 
-* Customize
-- dired-lsi-separator :: Separator between item and description.
-- dired-lsi--create-spacer-fn :: Create additional spacer function.
+*** Manual editing
 
-  This variable should be function symbol or lambda function.
-  That function called with empty argument and should return string or nil.
+Descriptions are stored in =.description.lsi= files within each directory. You can edit these files directly.
 
-* Information
-** Community
-All feedback and suggestions are welcome!
+After manual edits, revert the dired buffer with =g= (=dired-revert=) to see changes.
 
-You can use github issues, but you can also use [[https://conao3-support.slack.com/join/shared_invite/enQtNjUzMDMxODcyMjE1LWUwMjhiNTU3Yjk3ODIwNzAxMTgwOTkxNmJiN2M4OTZkMWY0NjI4ZTg4MTVlNzcwNDY2ZjVjYmRiZmJjZDU4MDE][Slack]]
-if you want a more casual conversation.
+** Customization
 
-** Contribution
-We welcome PR!
+- =dired-lsi-separator= - String displayed between filename and description (default: =" / "=)
+- =dired-lsi--create-spacer-fn= - Function returning additional spacing string (for icon alignment)
 
-*** Require tools for testing
-- keg
-  #+begin_src shell
-    cd ~/
-    hub clone conao3/keg .keg
-    export PATH="$HOME/.keg/bin:$PATH"
-  #+end_src
+** Contributing
 
-*** Running test
-Below operation flow is recommended.
+Contributions are welcome. Please feel free to submit issues and pull requests.
+
+*** Running tests
+
 #+begin_src shell
-  git branch [feature-branch]       # Create branch named [feature-branch]
-  git checkout [feature-branch]     # Checkout branch named [feature-branch]
+# Install keg (test runner)
+git clone https://github.com/conao3/keg ~/.keg
+export PATH="$HOME/.keg/bin:$PATH"
 
-  # <edit loop>
-  emacs dired-lsi.el             # Edit something you want
-
-  make test                         # Test dired-lsi
-  git commit -am "brabra"           # Commit (auto-run test before commit)
-  # </edit loop>
-
-  hub fork                          # Create fork at GitHub
-  git push [user] [feature-branch]  # Push feature-branch to your fork
-  hub pull-request                  # Create pull-request
+# Run tests
+make test
 #+end_src
-
-** Migration
 
 ** License
-#+begin_example
-  General Public License Version 3 (GPLv3)
-  Copyright (c) Naoya Yamashita - https://conao3.com
-  https://github.com/conao3/dired-lsi.el/blob/master/LICENSE
-#+end_example
+
+GPL-3.0. See [[https://github.com/conao3/dired-lsi.el/blob/master/LICENSE][LICENSE]] for details.
 
 ** Author
-- Naoya Yamashita ([[https://github.com/conao3][conao3]])
 
-** Contributors
+Naoya Yamashita ([[https://github.com/conao3][conao3]])
