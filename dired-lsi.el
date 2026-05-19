@@ -44,6 +44,11 @@
   :group 'convenience
   :link '(url-link :tag "Github" "https://github.com/conao3/dired-lsi.el"))
 
+(defcustom dired-lsi-filename ".description.lsi"
+  "File name for description file."
+  :group 'dired-lsi
+  :type 'string)
+
 (defcustom dired-lsi-separator " / "
   "Separator between item and description."
   :group 'dired-lsi
@@ -131,7 +136,7 @@ If return nil, dired-lsi doesn't show description."
     (while (not (eobp))
       (when (dired-move-to-filename nil)
         (when-let* ((item (dired-get-filename 'relative 'noerror))
-                    (file (expand-file-name ".description.lsi" item))
+                    (file (expand-file-name dired-lsi-filename item))
                     (desc (when (file-readable-p file)
                             (with-temp-buffer
                               (insert-file-contents file)
@@ -152,14 +157,14 @@ If return nil, dired-lsi doesn't show description."
   (interactive
    (let (dir*)
      (list (setq dir* (dired-get-filename nil 'allow-dir))
-           (let ((file (expand-file-name ".description.lsi" dir*)))
+           (let ((file (expand-file-name dired-lsi-filename dir*)))
              (read-string "Description: "
                           (when (file-readable-p file)
                             (with-temp-buffer
                               (insert-file-contents file)
                               (buffer-string)))
                           'dired-lsi-description-history)))))
-  (let ((file (expand-file-name ".description.lsi" dir)))
+  (let ((file (expand-file-name dired-lsi-filename dir)))
     (if (string-empty-p desc)
         (delete-file file)
       (with-temp-file file
