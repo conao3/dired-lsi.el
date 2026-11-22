@@ -56,7 +56,7 @@ If you use [[https://github.com/conao3/dired-git.el][dired-git]] with all-the-ic
 #+begin_src emacs-lisp
 (leaf dired-lsi
   :ensure t
-  :custom ((dired-lsi--create-spacer-fn
+  :custom ((dired-lsi-create-spacer-fn
             . (lambda () (when all-the-icons-dired-mode "  \t"))))
   :hook dired-mode-hook)
 #+end_src
@@ -89,7 +89,7 @@ After manual edits, revert the dired buffer with =g= (=dired-revert=) to see cha
 ** Customization
 
 - =dired-lsi-separator= - String displayed between filename and description (default: =" / "=)
-- =dired-lsi--create-spacer-fn= - Function returning additional spacing string (for icon alignment)
+- =dired-lsi-create-spacer-fn= - Function returning additional spacing string (for icon alignment)
 
 ** Contributing
 

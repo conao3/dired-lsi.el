@@ -29,7 +29,7 @@
 ;;   (add-hook 'dired-mode-hook 'dired-lsi-mode)
 
 ;; If you use `dired-git', I suggest below customize.
-;;   (setq dired-lsi--create-spacer-fn
+;;   (setq dired-lsi-create-spacer-fn
 ;;         (lambda () (when all-the-icons-dired-mode "  \t")))
 
 
@@ -49,7 +49,10 @@
   :group 'dired-lsi
   :type 'string)
 
-(defcustom dired-lsi--create-spacer-fn #'ignore
+(define-obsolete-variable-alias 'dired-lsi--create-spacer-fn
+  'dired-lsi-create-spacer-fn "1.0.2")
+
+(defcustom dired-lsi-create-spacer-fn #'ignore
   "Create additional spacer function.
 This variable should be function symbol or lambda function.
 That function called with empty argument and should return string or nil."
@@ -118,7 +121,7 @@ If return nil, dired-lsi doesn't show description."
                     "\n"
                     (format "\n%s"
                             (concat
-                             (funcall dired-lsi--create-spacer-fn)
+                             (funcall dired-lsi-create-spacer-fn)
                              (make-string (+ sep col) ?\s)))
                     elm)))))
     (identity)))                        ; empty check
