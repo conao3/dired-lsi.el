@@ -1,9 +1,10 @@
-#+title: dired-lsi.el
 #+author: conao3
 
-[[https://github.com/conao3/dired-lsi.el/blob/master/LICENSE][https://img.shields.io/github/license/conao3/dired-lsi.el.svg?style=flat-square]]
-[[https://github.com/conao3/dired-lsi.el/releases][https://img.shields.io/github/tag/conao3/dired-lsi.el.svg?style=flat-square]]
-[[https://github.com/conao3/dired-lsi.el/actions][https://github.com/conao3/dired-lsi.el/workflows/Main%20workflow/badge.svg]]
+#+html: <p align="center"><img src="docs/assets/banner.png" alt="dired-lsi.el: Add directory descriptions to dired buffers and show them inline" width="880"></p>
+#+html: <p align="center"><strong>Add directory descriptions to dired buffers and show them inline</strong></p>
+#+html: <p align="center"><a href="https://github.com/conao3/dired-lsi.el/actions/workflows/test.yml"><img src="https://github.com/conao3/dired-lsi.el/actions/workflows/test.yml/badge.svg?branch=master" alt="CI"></a> <a href="https://elispore.conao3.com/?q=repo:conao3/dired-lsi.el"><img src="https://img.shields.io/static/v1?label=elispore&message=dired-lsi.el&color=c96442" alt="Elispore"></a> <a href="https://github.com/conao3/dired-lsi.el/releases"><img src="https://img.shields.io/github/v/tag/conao3/dired-lsi.el" alt="Latest tag"></a> <a href="LICENSE"><img src="https://img.shields.io/github/license/conao3/dired-lsi.el" alt="License"></a> <a href="dired-lsi.el"><img src="https://img.shields.io/badge/Emacs-26.1%2B-7F5AB6" alt="Emacs 26.1+"></a> <a href="https://github.com/conao3/dired-lsi.el/stargazers"><img src="https://img.shields.io/github/stars/conao3/dired-lsi.el?style=flat" alt="GitHub stars"></a></p>
+#+html: <p align="center"><a href="#installation">Installation</a> | <a href="#usage">Usage</a> | <a href="#customization">Customization</a> | <a href="#license">License</a></p>
+#+html: <h1>dired-lsi.el</h1>
 
 Add directory descriptions to dired buffers. Annotate your folders with helpful memos that display inline.
 
